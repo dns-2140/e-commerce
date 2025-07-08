@@ -7,6 +7,7 @@ const ProductListContainer = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const API_URL = 'https://fakestoreapi.com/products';
 
   useEffect(() => {
@@ -35,8 +36,11 @@ const ProductListContainer = () => {
   console.log(products);
   return (
     <>
-      <ProductForm addProduct={addProduct} />
-      <ProductList products={products} />
+      <div className='md:p-32 bg-slate-100 max-w-[100vw]'>
+        <ProductForm addProduct={addProduct} />
+
+        <ProductList products={products} />
+      </div>
     </>
   );
 };

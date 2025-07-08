@@ -30,9 +30,18 @@ const ProductDetails = () => {
     setIsEditing(true);
   }
 
-  function handleClickDelete() {
-    console.log('handleclickdelete');
-  }
+  const handleClickDelete = async () => {
+    try {
+      setLoading(true);
+      await axios.delete(API_URL);
+      navigate('/'); // Redirect to home page after successful deletion
+    } catch (error) {
+      setError(error);
+      console.error('Error deleting product:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -74,22 +83,32 @@ const ProductDetails = () => {
 
   if (loading) return 'Loading..';
   if (error) return 'error';
-  console.log(product);
+
   return (
     <>
-      <div>
+      <div className='p-4 flex flex-col gap-8'>
         {product && (
           <>
-            <span onClick={() => navigate(`/`)}>go back</span>
-            <img src={product.image} alt='' width={128} />
+            <span onClick={() => navigate(`/`)}> go back</span>
+            <img src={product.image} alt='' width={256} />
             <h1>{product.title}</h1>
             <p>{product.description}</p>
-            <p>{product.price}</p>
-            <div onClick={handleClickUpdate}>update</div>
-            <div onClick={handleClickDelete}>delete</div>
+            <p>$ {product.price}</p>
+            <div
+              onClick={handleClickUpdate}
+              className='bg-blue-500 text-white px-4 py-2'
+            >
+              update
+            </div>
+            <div
+              onClick={handleClickDelete}
+              className='bg-red-500 text-white px-4 py-2'
+            >
+              delete
+            </div>
 
             {isEditing && (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                 <label htmlFor='title'>title</label>
                 <input
                   type='text'
@@ -98,6 +117,7 @@ const ProductDetails = () => {
                   onChange={handleInputChange}
                   id='title'
                   value={formData.title}
+                  className='border border-slate-200'
                 />
 
                 <label htmlFor='price'>price</label>
@@ -107,6 +127,7 @@ const ProductDetails = () => {
                   id='price'
                   value={formData.price}
                   onChange={handleInputChange}
+                  className='border border-slate-200'
                 />
                 <label htmlFor='description'>Description</label>
                 <input
@@ -115,6 +136,7 @@ const ProductDetails = () => {
                   value={formData.description}
                   id='description'
                   onChange={handleInputChange}
+                  className='border border-slate-200'
                 />
                 <label htmlFor='category'>category</label>
                 <input
@@ -123,8 +145,14 @@ const ProductDetails = () => {
                   value={formData.category}
                   id='category'
                   onChange={handleInputChange}
+                  className='border border-slate-200'
                 />
-                <button type='submit'>submit</button>
+                <button
+                  type='submit'
+                  className='bg-blue-500 text-white px-4 py-2'
+                >
+                  submit
+                </button>
               </form>
             )}
           </>
